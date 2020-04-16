@@ -5,11 +5,11 @@ class AppContainer extends Component {
         super(props);
         this.state = {
             title: '',
-            year: 0,
+            yearReleased: 0,
             movieArray: [],
         }
     }
-//TEST TO MAKE SURE THE FRONT END IS WORKING COORECTLY
+    //TEST TO MAKE SURE THE FRONT END IS WORKING COORECTLY
     componentDidMount = () => {
         // this.state.movieArray.push(
         //     {
@@ -31,26 +31,44 @@ class AppContainer extends Component {
     }
 
     //fetch our own database/pass in path of route
-    loadData = async() => {
+    loadData = async () => {
         let response = await fetch('/api');
         console.log(response);
         let json = await response.json();
         //sanity
         console.table(json);
+        this.setState({ movieArray: json })
     }
 
     handleInputs = (event) => {
         if (event.target.name === 'title') {
             this.setState({ title: event.target.value })
         } else if (event.target.name === 'year') {
-            this.setState({ year: event.target.value })
+            this.setState({ yearReleased: event.target.value })
         }
     }
 
-    handleSubmission = (event) => {
+    //make method asyncronous for the fecth
+    handleSubmission = async (event) => {
         event.preventDefault();
+        //what allows us to send json data
+        let formData = {
+            title : this.state.title,
+            yearReleased : this.state.yearReleased
+        }
+        let response = await fetch('/api', {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body : JSON.stringify(formData)
+        })
+        let json = await response.json();
+        //sanity
+        console.log(json);
 
-        console.log(this.state)
+        // console.log(this.state)
     }
 
     render() {
@@ -76,9 +94,12 @@ class AppContainer extends Component {
                     {
                         this.state.movieArray.map((movie, index) => {
                             return (
-                                <div key={index}>
+
+                                <div key={movie._id}>
                                     <p>Movie Title: {movie.title}</p>
-                                    <p>Year Released: {movie.year}</p>
+
+                                    <p>Year Released: {movie.yearReleased}</p>
+                                    <hr />
                                 </div>
                             )
                         })
