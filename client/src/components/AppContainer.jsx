@@ -9,23 +9,34 @@ class AppContainer extends Component {
             movieArray: [],
         }
     }
-
+//TEST TO MAKE SURE THE FRONT END IS WORKING COORECTLY
     componentDidMount = () => {
-        this.state.movieArray.push(
-            {
-                title : 'Hook',
-                year:1991
-            }
-        )
+        // this.state.movieArray.push(
+        //     {
+        //         title : 'Hook',
+        //         year:1991
+        //     }
+        // )
 
-        this.state.movieArray.push(
-            {
-                title : 'Wall-e',
-                year: 2010
-            }
-        )
-            //reset array globally
-        this.setState({movieArray : this.state.movieArray})
+        // this.state.movieArray.push(
+        //     {
+        //         title : 'Wall-e',
+        //         year: 2010
+        //     }
+        // )
+        //     //reset array globally
+        // this.setState({movieArray : this.state.movieArray});
+
+        this.loadData();
+    }
+
+    //fetch our own database/pass in path of route
+    loadData = async() => {
+        let response = await fetch('/api');
+        console.log(response);
+        let json = await response.json();
+        //sanity
+        console.table(json);
     }
 
     handleInputs = (event) => {
